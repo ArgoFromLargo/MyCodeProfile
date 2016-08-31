@@ -4,7 +4,7 @@
 This assignment will require you to implement a new shell that parses a command entered by the user and creates a set of new processes to run a distributed computing application. The shell requires redirection of input and output and prevention of zombie processes. Your shell will not behave like a typical shell to process commands at the command line; rather it is designed to help users launch multiple processes simultaneously to solve computing problems cooperatively.
 
 # THE PROGRAM
-This is a two-part project to implement the program myshell. In the first part, your program must parse an input string into a structure. The structure must then be used by the second part to 1) create a set of new processes based on the input on the shell's command line and 2) handle input and output redirection for the new processes.
+This is a two-part project to implement the program `myshell`. In the first part, your program must parse an input string into a structure. The structure must then be used by the second part to 1) create a set of new processes based on the input on the shell's command line and 2) handle input and output redirection for the new processes.
 
 # PART 1:
 Your program must perform the following actions:
@@ -14,7 +14,7 @@ program must terminate when the command exit is entered.
 3. Parse the input string into tokens, which are single words delimited by one or more spaces, tabs, or
 newline characters.
 4. Store the tokens in a provided structure shown below.
-5. Print the contents of the structure using the printParams() function, which is provided and explained
+5. Print the contents of the structure using the `printParams()` function, which is provided and explained
 below, but only when the shell is started with the debug option –Debug. Otherwise, the contents of the
 string will not be printed.
 6. Return back to step 1.
@@ -37,7 +37,7 @@ Notice that the first three components of the struct are special. The first two 
 
     $$$ one two three <four >five
     
-When the line is parsed, the first three tokens are not special because they do not start with a beginning character such as '<' or '>', so they should be placed in argumentVector[0], argumentVector[1], and argumentVector[2] respectively. The argument counter named argumentCount should be set to three. When the fourth token is extracted, it is identified as an input redirection because of the beginning character (’<’). The characters following immediately the redirection indicator form the name of the file from which input should be read. The name of the input file (“four”) should be stored in inputRedirect. Similarly, the beginning character (‘>’) of the fifth token identifies output redirection and the characters following the redirect character specifies the name of the file to which output should be sent. The name of the output file (“four”) should be stored in outputRedirect. Please do not allow for spaces between the beginning character for redirection ('<' or '>') and the file name. If input or output redirection is not specified on the command line, your program needs to set the corresponding fields in the structure to NULL. Overall, an acceptable input is a single text line ending by a new line character that follows the syntax as shown below:
+When the line is parsed, the first three tokens are not special because they do not start with a beginning character such as '<' or '>', so they should be placed in `argumentVector[0]`, `argumentVector[1]`, and `argumentVector[2]` respectively. The argument counter named argumentCount should be set to three. When the fourth token is extracted, it is identified as an input redirection because of the beginning character (’<’). The characters following immediately the redirection indicator form the name of the file from which input should be read. The name of the input file (“four”) should be stored in inputRedirect. Similarly, the beginning character (‘>’) of the fifth token identifies output redirection and the characters following the redirect character specifies the name of the file to which output should be sent. The name of the output file (“four”) should be stored in outputRedirect. Please do not allow for spaces between the beginning character for redirection ('<' or '>') and the file name. If input or output redirection is not specified on the command line, your program needs to set the corresponding fields in the structure to `NULL`. Overall, an acceptable input is a single text line ending by a new line character that follows the syntax as shown below:
 
     [token [' '|'\t']+]* [token] [' '|'\t']+ [<input [' '|'\t']+] [>output [' '| '\t']+]
 

@@ -25,10 +25,10 @@ The structure used to store the parsed input is shown below. I have included a d
     /* structure to hold input data */
     struct PARAM
     {
-        char *inputRedirect;    /* file name or NULL */
-        char *outputRedirect;   /* file name or NULL */
-        int  argumentCount;     /* number of tokens in argument vector */
-        char *argumentVector[MAXARGS]; /* array of strings */
+        char *inputRedirect;            /* file name or NULL */
+        char *outputRedirect;           /* file name or NULL */
+        int  argumentCount;             /* number of tokens in argument vector */
+        char *argumentVector[MAXARGS];  /* array of strings */
     };
     /* a typedef so we don’t need to use "struct PARAM" all the time */
     typedef struct PARAM Param_t;

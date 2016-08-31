@@ -40,3 +40,18 @@ Notice that the first three components of the struct are special. The first two 
 When the line is parsed, the first three tokens are not special because they do not start with a beginning character such as '<' or '>', so they should be placed in argumentVector[0], argumentVector[1], and argumentVector[2] respectively. The argument counter named argumentCount should be set to three. When the fourth token is extracted, it is identified as an input redirection because of the beginning character (’<’). The characters following immediately the redirection indicator form the name of the file from which input should be read. The name of the input file (“four”) should be stored in inputRedirect. Similarly, the beginning character (‘>’) of the fifth token identifies output redirection and the characters following the redirect character specifies the name of the file to which output should be sent. The name of the output file (“four”) should be stored in outputRedirect. Please do not allow for spaces between the beginning character for redirection ('<' or '>') and the file name. If input or output redirection is not specified on the command line, your program needs to set the corresponding fields in the structure to NULL. Overall, an acceptable input is a single text line ending by a new line character that follows the syntax as shown below:
 
     [token [' '|'\t']+]* [token] [' '|'\t']+ [<input [' '|'\t']+] [>output [' '| '\t']+]
+
+In this notation, [ ] indicates an optional parameter, * indicates 0 or more times the value in the brackets, + indicates1ormoretimesthevalueinthebrackets,and| indicatesalternatives.
+Once the input line is parsed and the structure elements are properly set, you must print the structure with the following function when the shell is in debug mode.
+
+    void printParams(Param_t * param)
+    {
+    int i;
+    printf ("InputRedirect: [%s]\n",
+      (param->inputRedirect != NULL) ? param->inputRedirect:"NULL");
+    printf ("OutputRedirect: [%s]\n",
+      (param->outputRedirect != NULL) ? param->outputRedirect:"NULL");
+    printf ("ArgumentCount: [%d]\n", param->argumentCount);
+    for (i = 0; i < param->argumentCount; i++)
+       printf("ArgumentVector[%2d]: [%s]\n", i, param->argumentVector[i]);
+    }

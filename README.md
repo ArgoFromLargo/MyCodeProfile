@@ -19,19 +19,15 @@ below, but only when the shell is started with the debug option –Debug. Otherw
 string will not be printed.
 6. Return back to step 1.
 The structure used to store the parsed input is shown below. I have included a defined value to indicate the maximum number of tokens you will find on the command line.
-
     /* don’t test program with more than this many tokens for input */
     #define MAXARGS 32
     /* structure to hold input data */
     struct PARAM
     {
-    char *inputRedirect;
-    char *outputRedirect;
-    int  argumentCount;
-    char *argumentVector[MAXARGS]; /* array of strings */
-    
-    /* file name or NULL */
-    /* number of tokens in argument vector */
+        char *inputRedirect;    /* file name or NULL */
+        char *outputRedirect;   /* file name or NULL */
+        int  argumentCount;     /* number of tokens in argument vector */
+        char *argumentVector[MAXARGS]; /* array of strings */
     };
     /* a typedef so we don’t need to use "struct PARAM" all the time */
     typedef struct PARAM Param_t;

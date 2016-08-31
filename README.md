@@ -29,8 +29,7 @@ The structure used to store the parsed input is shown below. I have included a d
     char *outputRedirect;
     int  argumentCount;
     char *argumentVector[MAXARGS]; /* array of strings */
-    DISTRIBUTED COMPUTING
-    /* file name or NULL */
+    
     /* file name or NULL */
     /* number of tokens in argument vector */
     };

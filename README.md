@@ -60,3 +60,18 @@ Once the input line is parsed and the structure elements are properly set, you m
 You must extend the previous program to create a specific shell program that runs distributed computing solutions. The functionality of your shell program is different from that of a production shell such as a c-shell or a bourne shell found in many operating systems because the shell will launch several instances of a program. Your shell reads input from a command line and interprets it. Your shell must handle input/output redirection and interpret an argument vector to run a specified program with its own parameter as follows:
 - argumentVector[0]: this element will define the name of a program that must be executed.
 - argumentVector[1]: this element will define a counter that specifies the number of times the program must be launched as a separate process/instance.
+- All other elements in the argument vector must be passed to the specified program.
+
+Upon interpreting the values in the argument vector, your shell must launch kinstancesof the specified program using  system  call fork() where kis  the  number  specified  in argumentVector[1].It  must  generate  a  new argument vector for each processto become the command lineargumentsread in main(). However, in order for the  processes  to  work cooperatively  on  solving  a  problem the  shell  must  generate  a  separate  index  for  each process and passesitto the process in the new argument vector. The program will use this index to apply a divide and conquer strategy on the data for solving aproblem. The new index should be inserted as a separate value into the previously generated argument vector to create a new argument vector. You must decide for yourself whether you  can  use  the  existing  argument  vector  in  the  structure  or  create  a  new  argument  vectorto  store  the  new values.
+
+Here is an example of how the shell should workassuming that $$$ is the prompt:
+
+    $$$ ./collatz 410000
+
+In  this  example,the  shell must  launcha local program  called  collatz  4  times.  It  provides  each  collatz  process the command line arguments that includethe following:
+
+    collatz 4 i 10000
+
+Here,iis the index of the instancethat the shell forks. It should range from 0 to 3 for the corresponding instance of collatz.Each  instance  of  collatz  may  use  i  and  4  to  decide  what  range  of  numbers among  the  specified  10,000 it must process.
+
+Your  shell  must handle  the  following  error  cases.  Users  may  enter  an  incorrect  program  name  referringto  a program  that does  notexist on  your  file  system or  enter  a  character  string as  the  counter  value thatis  not  an integer, or enter nothing. Your job should be to alert the user if the program you attempt to execute does not exist or if the second argument is  not an integer. Take advantage of the appropriate system calls mentioned below to determine if a program exists or not. Furthermore, your shell must handle empty inputs gracefully and not crash.

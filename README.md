@@ -46,12 +46,12 @@ Once the input line is parsed and the structure elements are properly set, you m
 
     void printParams(Param_t * param)
     {
-    int i;
-    printf ("InputRedirect: [%s]\n",
-      (param->inputRedirect != NULL) ? param->inputRedirect:"NULL");
-    printf ("OutputRedirect: [%s]\n",
-      (param->outputRedirect != NULL) ? param->outputRedirect:"NULL");
-    printf ("ArgumentCount: [%d]\n", param->argumentCount);
-    for (i = 0; i < param->argumentCount; i++)
-       printf("ArgumentVector[%2d]: [%s]\n", i, param->argumentVector[i]);
+        int i;
+        printf ("InputRedirect: [%s]\n",
+          (param->inputRedirect != NULL) ? param->inputRedirect:"NULL");
+        printf ("OutputRedirect: [%s]\n",
+          (param->outputRedirect != NULL) ? param->outputRedirect:"NULL");
+        printf ("ArgumentCount: [%d]\n", param->argumentCount);
+        for (i = 0; i < param->argumentCount; i++)
+           printf("ArgumentVector[%2d]: [%s]\n", i, param->argumentVector[i]);
     }

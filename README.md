@@ -32,3 +32,11 @@ The structure used to store the parsed input is shown below. I have included a d
     };
     /* a typedef so we don’t need to use "struct PARAM" all the time */
     typedef struct PARAM Param_t;
+
+Notice that the first three components of the struct are special. The first two describe the file name for either input redirection or output redirection, if desired. The third describes the number of tokens in the argument vector entered at the command-line. Consider this line of input shown with the prompt $$$.
+
+    $$$ one two three <four >five
+    
+When the line is parsed, the first three tokens are not special because they do not start with a beginning character such as '<' or '>', so they should be placed in argumentVector[0], argumentVector[1], and argumentVector[2] respectively. The argument counter named argumentCount should be set to three. When the fourth token is extracted, it is identified as an input redirection because of the beginning character (’<’). The characters following immediately the redirection indicator form the name of the file from which input should be read. The name of the input file (“four”) should be stored in inputRedirect. Similarly, the beginning character (‘>’) of the fifth token identifies output redirection and the characters following the redirect character specifies the name of the file to which output should be sent. The name of the output file (“four”) should be stored in outputRedirect. Please do not allow for spaces between the beginning character for redirection ('<' or '>') and the file name. If input or output redirection is not specified on the command line, your program needs to set the corresponding fields in the structure to NULL. Overall, an acceptable input is a single text line ending by a new line character that follows the syntax as shown below:
+
+    [token [' '|'\t']+]* [token] [' '|'\t']+ [<input [' '|'\t']+] [>output [' '| '\t']+]

@@ -55,3 +55,8 @@ Once the input line is parsed and the structure elements are properly set, you m
         for (i = 0; i < param->argumentCount; i++)
            printf("ArgumentVector[%2d]: [%s]\n", i, param->argumentVector[i]);
     }
+
+# PART 2:
+You must extend the previous program to create a specific shell program that runs distributed computing solutions. The functionality of your shell program is different from that of a production shell such as a c-shell or a bourne shell found in many operating systems because the shell will launch several instances of a program. Your shell reads input from a command line and interprets it. Your shell must handle input/output redirection and interpret an argument vector to run a specified program with its own parameter as follows:
+- argumentVector[0]: this element will define the name of a program that must be executed.
+- argumentVector[1]: this element will define a counter that specifies the number of times the program must be launched as a separate process/instance.

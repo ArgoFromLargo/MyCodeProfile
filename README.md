@@ -72,6 +72,6 @@ In  this  example,the  shell must  launcha local program  called  collatz  4  ti
 
     collatz 4 i 10000
 
-Here,iis the index of the instancethat the shell forks. It should range from 0 to 3 for the corresponding instance of collatz.Each  instance  of  collatz  may  use  i  and  4  to  decide  what  range  of  numbers among  the  specified  10,000 it must process.
+Here, *i* is the index of the instancethat the shell forks. It should range from 0 to 3 for the corresponding instance of collatz.Each  instance  of  collatz  may  use  i  and  4  to  decide  what  range  of  numbers among  the  specified  10,000 it must process.
 
 Your  shell  must handle  the  following  error  cases.  Users  may  enter  an  incorrect  program  name  referringto  a program  that does  notexist on  your  file  system or  enter  a  character  string as  the  counter  value thatis  not  an integer, or enter nothing. Your job should be to alert the user if the program you attempt to execute does not exist or if the second argument is  not an integer. Take advantage of the appropriate system calls mentioned below to determine if a program exists or not. Furthermore, your shell must handle empty inputs gracefully and not crash.

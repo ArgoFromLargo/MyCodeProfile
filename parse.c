@@ -20,8 +20,15 @@ void printParams(Param_t *param) {
 }
 
 void tokenize(char command[], const char delimiters[], Param_t *param) {
+    param->inputRedirect = NULL;
+    param->outputRedirect = NULL;
     char *token;
+    int debugMode = 0;
     token = strtok(command, delimiters);
+    
+    if(strcmp(token, "-Debug") == 0 || strcmp(token, "-debug") == 0)
+        debugMode = 1;
+    
     while(token != NULL) {
         if(*token == '<') {
             token++;
@@ -35,6 +42,10 @@ void tokenize(char command[], const char delimiters[], Param_t *param) {
             param->argumentVector[param->argumentCount] = token;
             param->argumentCount++;
         }
+        
         token = strtok(NULL, delimiters);
     }
+    
+    if(debugMode)
+        printParams(param);
 }

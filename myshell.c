@@ -17,8 +17,10 @@ int main(int argc, char** argv) {
 
     char command[500];
     const char delimiters[] = " \t\n";
+    
     Param_t *inputCommand;
     inputCommand = (Param_t *)malloc(sizeof(Param_t));
+    inputCommand->argumentCount = 0;
     
     printf("Enter a command with no more than 32 arguments.\n");
     fgets(command, 500, stdin);
@@ -30,6 +32,7 @@ int main(int argc, char** argv) {
         tokenize(command, delimiters, inputCommand);
     }
     
+    printParams(inputCommand);
+    
     return 0;
 }
-

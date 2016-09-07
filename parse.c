@@ -21,7 +21,20 @@ void printParams(Param_t *param) {
 
 void tokenize(char command[], const char delimiters[], Param_t *param) {
     char *token;
-    do {
-        token = strtok(command, delimiters);
-    } while(token != NULL);
+    token = strtok(command, delimiters);
+    while(token != NULL) {
+        if(*token == '<') {
+            token++;
+            param->inputRedirect = token;
+        }
+        else if(*token == '>') {
+            token++;
+            param->outputRedirect = token;
+        }
+        else {
+            param->argumentVector[param->argumentCount] = token;
+            param->argumentCount++;
+        }
+        token = strtok(NULL, delimiters);
+    }
 }

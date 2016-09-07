@@ -17,7 +17,6 @@ int main(int argc, char** argv) {
 
     char command[500];
     const char delimiters[] = " \t\n";
-    
     Param_t *inputCommand;
     inputCommand = (Param_t *)malloc(sizeof(Param_t));
     inputCommand->argumentCount = 0;
@@ -31,8 +30,6 @@ int main(int argc, char** argv) {
     else {
         tokenize(command, delimiters, inputCommand);
     }
-    
-    printParams(inputCommand);
-    
+        
     return 0;
 }

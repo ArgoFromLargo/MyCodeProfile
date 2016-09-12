@@ -26,8 +26,10 @@ void tokenize(char command[], const char delimiters[], Param_t *param) {
     int debugMode = 0;
     token = strtok(command, delimiters);
     
-    if(strcmp(token, "-Debug") == 0 || strcmp(token, "-debug") == 0)
+    if(strcmp(token, "-Debug") == 0 || strcmp(token, "-debug") == 0) {
         debugMode = 1;
+        token = strtok(NULL, delimiters);
+    }
     
     while(token != NULL) {
         if(*token == '<') {

@@ -36,6 +36,7 @@ void tokenize(char command[], const char delimiters[], Param_t *param) {
     // set the Param_t* to default values before tokenizing
     param->inputRedirect = NULL;
     param->outputRedirect = NULL;
+    param->argumentCount = 0;
     char *token;
     int debugMode = 0;
     token = strtok(command, delimiters);

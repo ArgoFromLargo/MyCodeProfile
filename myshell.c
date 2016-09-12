@@ -19,8 +19,7 @@ int main(int argc, char** argv) {
     const char delimiters[] = " \t\n";
     Param_t *inputCommand;
     inputCommand = (Param_t *)malloc(sizeof(Param_t));
-    inputCommand->argumentCount = 0;
-    
+
     printf("Enter a command with no more than 32 arguments.\n");
     fgets(command, 500, stdin);
     if(strcmp(command, "exit\n") == 0) {

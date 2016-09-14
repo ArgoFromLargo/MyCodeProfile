@@ -8,4 +8,4 @@ parse.o: parse.c
 	gcc -c -Wall parse.c
 
 clean:
-	rm myshell.o parse.o
+	rm myshell.o parse.o output.exe

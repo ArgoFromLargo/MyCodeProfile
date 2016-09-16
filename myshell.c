@@ -30,6 +30,11 @@ int main(int argc, char** argv) {
     
     Param_t *inputCommand = (Param_t *) malloc(sizeof(Param_t));
     tokenize(command, delimiters, inputCommand);
+
+    if(strcmp(argv[1], "-Debug") == 0 || strcmp(argv[1], "-debug") == 0) {
+        printParams(inputCommand);
+    }
+
         
     return 0;
 }

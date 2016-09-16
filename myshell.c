@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     char command[CMD_BUFFER_LEN];
     const char delimiters[] = " \t\n";
 
-    printf("Enter a command with no more than "MAXARGS" arguments.\n");
+    printf("Enter a command with no more than %d arguments.\n", MAXARGS);
     fgets(command, CMD_BUFFER_LEN, stdin);
     
     if(!strcmp(command, "exit\n")) {

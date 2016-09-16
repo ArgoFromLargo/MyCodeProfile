@@ -2,11 +2,11 @@
 
 This program is a test program that prints out the instance, the total number of instances, and the range of values each instance processes.
 
-Usage: testme <totalNumInstance> <index> <values>
+*Usage: testme <totalNumInstance> <index> <values>*
 
-<totalNumInstance>: this is the total number of instances the shell launches; the number must be positive
-<index>: this is the index of the instance; the number must be zero to <total_numInstances> - 1
-<value>: the values processed by all instnaces; the number must be a positive value
+  <totalNumInstance>: this is the total number of instances the shell launches; the number must be positive
+  <index>: this is the index of the instance; the number must be zero to <total_numInstances> - 1
+  <value>: the values processed by all instnaces; the number must be a positive value
 
 ##prime:
 

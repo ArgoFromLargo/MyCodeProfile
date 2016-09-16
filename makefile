@@ -1,5 +1,5 @@
 myshell: myshell.o parse.o
-	gcc -o output.exe myshell.o parse.o
+	gcc -o myshell myshell.o parse.o
 
 myshell.o: myshell.c
 	gcc -c -Wall myshell.c

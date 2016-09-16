@@ -10,24 +10,26 @@
 #include <string.h>
 #include "parse.h"
 
+#define CMD_BUFFER_LEN 500
+
 /*
  * 
  */
 int main(int argc, char** argv) {
 
-    char command[500];
+    char command[CMD_BUFFER_LEN];
     const char delimiters[] = " \t\n";
-    Param_t *inputCommand = (Param_t *)malloc(sizeof(Param_t));
 
-    printf("Enter a command with no more than 32 arguments.\n");
-    fgets(command, 500, stdin);
-    if(strcmp(command, "exit\n") == 0) {
+    printf("Enter a command with no more than "MAXARGS" arguments.\n");
+    fgets(command, CMD_BUFFER_LEN, stdin);
+    
+    if(!strcmp(command, "exit\n")) {
         printf("Program terminated.\n");
         return 0;
     }
-    else {
-        tokenize(command, delimiters, inputCommand);
-    }
+    
+    Param_t *inputCommand = (Param_t *) malloc(sizeof(Param_t));
+    tokenize(command, delimiters, inputCommand);
         
     return 0;
 }

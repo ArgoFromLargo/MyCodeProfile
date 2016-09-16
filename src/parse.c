@@ -38,13 +38,7 @@ void tokenize(char command[], const char delimiters[], Param_t *param) {
     param->outputRedirect = NULL;
     param->argumentCount = 0;
     char *token;
-    int debugMode = 0;
     token = strtok(command, delimiters);
-    
-    if(strcmp(token, "-Debug") == 0 || strcmp(token, "-debug") == 0) { // tests for -Debug flag
-        debugMode = 1;
-        token = strtok(NULL, delimiters); // skips this argument before reading into argumentVector
-    }
     
     while(token != NULL) {
         if(*token == '<') {
@@ -62,7 +56,4 @@ void tokenize(char command[], const char delimiters[], Param_t *param) {
         
         token = strtok(NULL, delimiters); // set token to next delimiter
     }
-    
-    if(debugMode)
-        printParams(param); // print parameters if -Debug mode is on
 }

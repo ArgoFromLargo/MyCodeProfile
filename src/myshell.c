@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
     tokenize(command, delimiters, &inputCommand);
 
     // Check if the debug flag is set
-    if(strcmp(argv[1], "-Debug") == 0) {
+    if(strcmp(argv[1], "-Debug") == 0 || strcmp(argv[1], "[-Debug]") == 0) {
         // -debug is set, so print arguments
         printParams(&inputCommand);
     }

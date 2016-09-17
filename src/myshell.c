@@ -9,6 +9,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include "parse.h"
 
 #define CMD_BUFFER_LEN 500
@@ -139,21 +141,28 @@ void processCmd(const Param_t* inputCmd)
     
     // Fork the process n times and exec
     execCmd(n, inputCmd);
+    
+    // Wait for all the children to finish before returning
+    waitChildren(n);
 }
 
 void execCmd(int n, const Param_t* inputCmd)
 {
-    int pid = fork();
+    pid_t pid = fork();
     if (pid == 0) {
-        printf("I am the walrus.\n");
+        printf("In Child: PID = %d\n", pid);
         exit(0);
     } else
     {
-        printf("I am the eggman.\n");
+        printf("In Parent: Child PID = %d\n", pid);
     }
 }
 
 void waitChildren(int n)
 {
-
+    // Wait for all n processes to close
+    int status;
+  
+    pid_t pid = wait(&status);
+    printf("In Wait: PID = %d\n", pid);
 }

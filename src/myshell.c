@@ -1,6 +1,6 @@
 /* 
  * File:   myshell.c
- * Author: Luke Ledzik, Adam Mooers
+ * Authors: Luke Kledzik, Adam Mooers
  *
  * Created on August 24, 2016, 4:04 PM
  */

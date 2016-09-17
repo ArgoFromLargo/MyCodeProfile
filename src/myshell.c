@@ -133,8 +133,8 @@ void processCmd(const Param_t* inputCmd)
     int n = atoi(inputCmd->argumentVector[1]);
     
     if (n < 1) {
-      printf("myshell: count must be > 0\n%s\n", SHELL_USAGE);
-      return;
+        printf("myshell: count must be > 0\n%s\n", SHELL_USAGE);
+        return;
     }
     
     // Fork the process n times and exec
@@ -142,6 +142,18 @@ void processCmd(const Param_t* inputCmd)
 }
 
 void execCmd(int n, const Param_t* inputCmd)
+{
+    int pid = fork();
+    if (pid == 0) {
+        printf("I am the walrus.\n");
+        exit(0);
+    } else
+    {
+        printf("I am the eggman.\n");
+    }
+}
+
+void waitChildren(int n)
 {
 
 }

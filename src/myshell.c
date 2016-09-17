@@ -52,6 +52,14 @@ int processCmd(const Param_t* inputCmd);
 void execCmd(int n, char* arguments);
 
 /*
+ * Waits for any open child process to finish and accepts their exit codes. This should
+ * be run after execCmd(..) to prevent zombie processes and the grader's wrath.
+ *
+ * @param n The number of child processes that need to be closed
+ */
+void waitChildren(int n);
+
+/*
  * The entrance point for the shell. The user is prompted for
  * a myshell command. If they enter the exit command, the session
  * terminates. Otherwise, they can use the shell to start and manage

@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include "parse.h"
 
@@ -49,7 +50,7 @@ void processCmd(const Param_t* inputCmd);
  * @param n The number of instances of child_process to create (correctly formatted)
  * @param inputCmd original, user-defined, tokenized arguments
  */
-void execCmd(int n, Param_t* inputCmd);
+void execCmd(int n, const Param_t* inputCmd);
 
 /*
  * Waits for any open child process to finish and accepts their exit codes. This should
@@ -128,13 +129,19 @@ void processCmd(const Param_t* inputCmd)
         return;
     }
     
+    // Get the number of child processes to open
+    int n = atoi(inputCmd->argumentVector[1]);
+    
+    if (n < 1) {
+      printf("myshell: count must be > 0\n%s\n", SHELL_USAGE);
+      return;
+    }
     
     // Fork the process n times and exec
-    
-    
+    execCmd(n, inputCmd);
 }
 
-void execCmd(int n, Param_t* inputCmd)
+void execCmd(int n, const Param_t* inputCmd)
 {
 
 }

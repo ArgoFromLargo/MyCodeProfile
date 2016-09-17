@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <inistd.h>
 #include "parse.h"
 
 #define CMD_BUFFER_LEN 500
@@ -17,10 +18,38 @@
  * processes. In the case that the input is not correctly formatted, an error
  * message will describe the problem. Input piping (<) and output piping (>)
  * of child processes are supported and optional.
+ * 
+ * Command format:
+ *   - child_process n [child_argument]*
+ *
+ * Note(0): * indicates 0 or more of the item in brackets
+ * Note(1): child_process indicates the child process to run
+ * Note(2): n is an integer which indicates the number of child_process to create
+ *
+ * See execCmd(...) for information on how the child processes recieve the formatted
+ * information.
+ *
+ * Note(4): i is the index of the child, in the order that they are executed
  *
  * @param inputCmd the tokenized input command from myshell. 
+ * @return return value indicates success in interpreting the command
  */
-void processCmd(const Param_t* inputCmd);
+int processCmd(const Param_t* inputCmd);
+
+/*
+ * Executes the given child process a given number of times with the given arguments.
+ * The command should be properly formatted by the time this stage is reached. The actual
+ * fork-exec occurs at this point, so mal-formatted input could forkbomb to the host OS.
+ *
+ * Each child process recieves the presented arguments in the following manner:
+ *   - child_process n i [child_argument]*
+ *
+ * Note (1): i is the index of the process, starting at zero, ending at n-1
+ *
+ * @param n The number of instances of child_process to create (correctly formatted)
+ * @param arguments original, user-defined, tokenized arguments
+ */
+void execCmd(int n, char* arguments);
 
 /*
  * The entrance point for the shell. The user is prompted for

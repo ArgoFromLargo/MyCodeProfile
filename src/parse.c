@@ -37,20 +37,26 @@ void tokenize(char command[], const char delimiters[], Param_t *param) {
     param->inputRedirect = NULL;
     param->outputRedirect = NULL;
     param->argumentCount = 0;
-    char *token;
-    token = strtok(command, delimiters);
+
+    char *token = strtok(command, delimiters);
     
     while(token != NULL) {
         if(*token == '<') {
             token++;
-            param->inputRedirect = token; // sets inputRedirect if < is read before argument
+            
+            // sets inputRedirect if < is read before argument
+            param->inputRedirect = token;
         }
         else if(*token == '>') {
             token++;
-            param->outputRedirect = token; // sets outputRedirect if > is read before argument
+
+            // sets outputRedirect if > is read before argument
+            param->outputRedirect = token;
         }
         else {
-            param->argumentVector[param->argumentCount] = token; // adds arg to array if not input or output redirect
+            // adds arg to array if not input or output redirect
+            param->argumentVector[param->argumentCount] = token;
+
             param->argumentCount++;
         }
         

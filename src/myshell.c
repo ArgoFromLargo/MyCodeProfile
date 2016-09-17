@@ -75,28 +75,32 @@ int main(int argc, char** argv) {
 
     char command[CMD_BUFFER_LEN];
     const char delimiters[] = " \t\n";
-
-    printf("Enter a command with no more than %d arguments.\n", MAXARGS);
-    fgets(command, CMD_BUFFER_LEN, stdin);
     
-    // Check to see if the exit command is issued
-    if(!strcmp(command, "exit\n")) {
-        printf("Program terminated.\n");
-        return 0;
+    // Enter the terminal loop
+    while(1) {
+        printf("\nEnter a command with no more than %d arguments.\n", MAXARGS);
+        fgets(command, CMD_BUFFER_LEN, stdin);
+        
+        // Check to see if the exit command is issued
+        if(!strcmp(command, "exit\n")) {
+            printf("Program terminated.\n");
+            break;
+        }
+        
+        Param_t inputCommand;
+        tokenize(command, delimiters, &inputCommand);
+
+        // Check if the debug flag is set
+        if(argc > 1 && strcmp(argv[1], "-Debug") == 0) {
+            // -debug is set, so print arguments
+            printParams(&inputCommand);
+        }
+     
+        // Check if the input is correctly-formatted
+        // Run the command if it is formatted correctly.
+        processCmd(&inputCommand);
     }
     
-    Param_t inputCommand;
-    tokenize(command, delimiters, &inputCommand);
-
-    // Check if the debug flag is set
-    if(argc > 1 && strcmp(argv[1], "-Debug") == 0) {
-        // -debug is set, so print arguments
-        printParams(&inputCommand);
-    }
- 
-    // Check if the input is correctly-formatted
-    // Run the command if it is formatted correctly.
-    processCmd(&inputCommand);
     return 0;
 }
 
@@ -119,11 +123,14 @@ void processCmd(const Param_t* inputCmd)
     
     // Determine if n can be formatted correctly
     if (!isInt(inputCmd->argumentVector[1])) {
-        printf("That's not an int!\n");
+        printf("myshell: the second argument must"
+               " be an integer.\n%s\n", SHELL_USAGE);
+        return;
     }
     
     
     // Fork the process n times and exec
+    
     
 }
 

@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "parse.h"
 
 /*
@@ -62,4 +63,24 @@ void tokenize(char command[], const char delimiters[], Param_t *param) {
         
         token = strtok(NULL, delimiters); // set token to next delimiter
     }
+}
+
+/*
+ * Determines if a given string can be converted to a valid integer.
+ * The integer may start with a plus or minus sign. The length of the
+ * integer is not accounted for.
+ *
+ * @param str the string to validate
+ * @return whether str can be converted to a valid integer
+ */
+int isInt(const char* str) {
+    // Account for sign
+    if (*str == '+' || *str == '-') str++;   
+ 
+    // Check each digit
+    do {
+        if (!isdigit(*str)) return 0;
+    } while (*(++str) != '\0');
+
+   return 1;  // All characters met the criteria
 }

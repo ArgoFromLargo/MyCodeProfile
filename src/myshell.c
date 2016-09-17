@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <inistd.h>
+#include <unistd.h>
 #include "parse.h"
 
 #define CMD_BUFFER_LEN 500

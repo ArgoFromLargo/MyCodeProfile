@@ -1,16 +1,17 @@
 /* 
  * File:   myshell.c
- * Author: Luke Ledzik, Adam Mooers
+ * Authors: Luke Kledzik, Adam Mooers
  *
  * Created on August 24, 2016, 4:04 PM
  */
 
 #include <stdio.h>
 #include <string.h>
-#include <inistd.h>
+#include <unistd.h>
 #include "parse.h"
 
 #define CMD_BUFFER_LEN 500
+#define SHELL_USAGE "Usage: command count [child_argument]*"
 
 /*
  * Processes a tokenized shell command. If the input is properly-formatted,
@@ -32,9 +33,8 @@
  * Note(4): i is the index of the child, in the order that they are executed
  *
  * @param inputCmd the tokenized input command from myshell. 
- * @return return value indicates success in interpreting the command
  */
-int processCmd(const Param_t* inputCmd);
+void processCmd(const Param_t* inputCmd);
 
 /*
  * Executes the given child process a given number of times with the given arguments.
@@ -47,9 +47,9 @@ int processCmd(const Param_t* inputCmd);
  * Note (1): i is the index of the process, starting at zero, ending at n-1
  *
  * @param n The number of instances of child_process to create (correctly formatted)
- * @param arguments original, user-defined, tokenized arguments
+ * @param inputCmd original, user-defined, tokenized arguments
  */
-void execCmd(int n, char* arguments);
+void execCmd(int n, Param_t* inputCmd);
 
 /*
  * Waits for any open child process to finish and accepts their exit codes. This should
@@ -89,10 +89,45 @@ int main(int argc, char** argv) {
     tokenize(command, delimiters, &inputCommand);
 
     // Check if the debug flag is set
-    if(strcmp(argv[1], "-Debug") == 0) {
+    if(argc > 1 && strcmp(argv[1], "-Debug") == 0) {
         // -debug is set, so print arguments
         printParams(&inputCommand);
     }
-   
+ 
+    // Check if the input is correctly-formatted
+    // Run the command if it is formatted correctly.
+    processCmd(&inputCommand);
     return 0;
+}
+
+void processCmd(const Param_t* inputCmd)
+{
+    // Make sure the minimum number of arguments have been added
+    if (inputCmd->argumentCount < 2) {
+        printf("myshell: missing operand\n%s\n", SHELL_USAGE);
+        return;
+    }
+
+    // Check if the program in arg[0] exists
+    if (access(inputCmd->argumentVector[0], X_OK) != 0) {
+        // File does not exist, or user lacks exe permissions
+        printf("myshell: \"%s\" cannot execute.\n%s\n", 
+            inputCmd->argumentVector[0], 
+            SHELL_USAGE);
+        return;
+    }
+    
+    // Determine if n can be formatted correctly
+    if (!isInt(inputCmd->argumentVector[1])) {
+        printf("That's not an int!\n");
+    }
+    
+    
+    // Fork the process n times and exec
+    
+}
+
+void execCmd(int n, Param_t* inputCmd)
+{
+
 }

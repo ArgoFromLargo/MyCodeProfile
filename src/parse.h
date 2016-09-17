@@ -17,6 +17,7 @@ struct PARAM {
 typedef struct PARAM Param_t;
 
 void printParams(Param_t* param);
+
 void tokenize(char command[], const char delimiters[], Param_t *param);
 
 #endif

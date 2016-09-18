@@ -12,5 +12,14 @@ int main(int argc, char* argv[])
         printf("%s ", argv[i]);
     }
     
+    printf("\nInput: \n");
+    
+    char buffer[32];
+    
+    while (fgets(buffer, sizeof buffer, stdin) != NULL)
+    {
+        printf("%s", buffer);
+    }
+    
     putchar('\n');
 }

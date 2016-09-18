@@ -1,8 +1,13 @@
-/* 
- * File:   myshell.c
- * Authors: Luke Kledzik, Adam Mooers
+/**
+ * myshell.c runs the shell. This includes prompting the user for input then processing, 
+ * interpreting, and validating that input. Algorithms for managing processes are integrated
+ * as well. Because the implementation is dependent on forking, this code will only run on Unix-
+ * compatible machines.
  *
- * Created on August 24, 2016, 4:04 PM
+ * @author Adam Mooers
+ * @author Luke Kledzik
+ * @date 9/18/2016
+ * @info Course COP4634
  */
 
 #include <stdio.h>
@@ -16,7 +21,7 @@
 #define CMD_BUFFER_LEN 500
 #define SHELL_USAGE "Usage: command count [child_argument]*"
 
-/*
+/**
  * Processes a tokenized shell command. If the input is properly-formatted,
  * the shell will create and manage an arbitrary number of specified child
  * processes. In the case that the input is not correctly formatted, an error
@@ -39,7 +44,7 @@
  */
 void processCmd(const Param_t* inputCmd);
 
-/*
+/**
  * Executes the given child process a given number of times with the given arguments.
  * The command should be properly formatted by the time this stage is reached. The actual
  * fork-exec occurs at this point, so mal-formatted input could forkbomb to the host OS.
@@ -57,18 +62,19 @@ void processCmd(const Param_t* inputCmd);
  */
 void execCmd(int n, const Param_t* inputCmd);
 
-/*
+/**
  * Attempts to redirect a file to another gracefully. If this fails, an error
  * is printed to the terminal.
  *
  * @param redirect the name of the new file to redirect to
  * @param mode the mode of the permissions
  * @param source the file to redirect
- * @param return: 0 if failure to redirect input or output, !0 otherwise.
+ *
+ * @return: 0 if failure to redirect input or output, !0 otherwise.
  */
 int redirFile(const char* redirect, const char * mode, FILE* source);
 
-/*
+/**
  * Waits for any open child process to finish and accepts their exit codes. This should
  * be run after execCmd(..) to prevent zombie processes and the grader's wrath.
  *
@@ -76,7 +82,7 @@ int redirFile(const char* redirect, const char * mode, FILE* source);
  */
 void waitChildren(int n);
 
-/*
+/**
  * The entrance point for the shell. The user is prompted for
  * a myshell command. If they enter the exit command, the session
  * terminates. Otherwise, they can use the shell to start and manage
@@ -86,6 +92,7 @@ void waitChildren(int n);
  * 
  * @param argc number of arguments from shell
  * @param argv arguments from the shell (not the same as myshell arguments)
+ *
  * @return 0, if no errors occur, otherwise a non-zero value
  */
 int main(int argc, char** argv) {

@@ -44,8 +44,17 @@ void printParams(Param_t* param);
  */
 void tokenize(char command[], const char delimiters[], Param_t *param);
 
+/**
+ * Determines if a given string can be converted to a valid integer.
+ * The integer may start with a plus or minus sign. The length of the
+ * integer is not accounted for.
+ */
 int isInt(const char* str);
 
+/**
+ * Formats the argument vector (argv) for new execv processes. Each new process 
+ * has a new index, so this value needs to be computed dynamically.
+ */
 char* formatChildArgV(const Param_t* inputCmd, int curI);
 
 #endif

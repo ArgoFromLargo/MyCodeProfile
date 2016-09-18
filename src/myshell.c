@@ -165,13 +165,14 @@ void execCmd(int n, const Param_t* inputCmd) {
             
             // Format the user command for the child process
             // Note the exec frees childArgv
-            //char* childArgv = formatChildArgV(inputCmd, i);
-            //printf("Child String: %s %s\n", inputCmd->argumentVector[0], childArgv);
+            char** childArgv = formatChildArgV(inputCmd, i);
             
             // Verify to make sure the execute is successful
-            execv(inputCmd->argumentVector[0], inputCmd->argumentVector);
+            execv(*childArgv, childArgv);
             
-            // Stop-gap fork bomb stopper, in case of a logic error
+            printf("Exec has failed to launch a new process.\n");
+            
+            // Stop-gap fork bomb stopper, in case of a exec error
             exit(0);
         }
         
@@ -182,7 +183,6 @@ void execCmd(int n, const Param_t* inputCmd) {
     waitChildren(forkCount);
 }
 
-// Does wait return immediately if no processes are available?
 void waitChildren(int n) {
     int status;
     int i;

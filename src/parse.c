@@ -103,8 +103,25 @@ char** formatChildArgV(const Param_t* inputCmd, int curI) {
     // Allocate memory for the int string (plus the null pointer)
     char* curIStr = (char*)malloc(INT_MAX_CHARS+1);
     sprintf(curIStr, "%d", curI);
-
-    char** const argv = (char **)malloc(sizeof(char*)*inputCmd->argumentCount);
+    
+    // Allocate memory for the argument vector
+    char** argv = (char **)malloc(sizeof(char*)*inputCmd->argumentCount+2);
+    
+    char** argvPtr = argv;
+    
+    *(argvPtr++) = inputCmd->argumentVector[0]; // filename
+    *(argvPtr++) = inputCmd->argumentVector[1]; // n
+    *(argvPtr++) = curIStr; // Current index i
+    
+    int i;
+    
+    // Retrieve the rest of the argument vectors
+    for(i=2; i<inputCmd->argumentCount;i++) {
+        *(argvPtr++) = inputCmd->argumentVector[i];
+    }
+    
+    // NULL pointer is required to let exec know when argv ends
+    *argvPtr = NULL;
     
     return argv;
 }

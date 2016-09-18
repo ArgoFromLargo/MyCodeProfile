@@ -1,7 +1,10 @@
-/*
+/**
  * File: parse.c
- * Author: lkledzik
- * Last Update: 9/12/2016 3:29 PM
+ * 
+ * @author lkledzik
+ * @author amooers
+ * @date 9/18/2016
+ * @info Course COP4634
  */
 
 #include <stdio.h>

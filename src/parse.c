@@ -4,8 +4,8 @@
  * This file includes the tools needed to parse the info entered
  * into myshell.
  * 
- * @author lkledzik
- * @author amooers
+ * @author Luke Kledzik
+ * @author Adam Mooers
  * @date 9/18/2016
  * @info Course COP4634
  */

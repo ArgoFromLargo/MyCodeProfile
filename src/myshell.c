@@ -58,6 +58,17 @@ void processCmd(const Param_t* inputCmd);
 void execCmd(int n, const Param_t* inputCmd);
 
 /*
+ * Attempts to redirect a file to another gracefully. If this fails, an error
+ * is printed to the terminal.
+ *
+ * @param redirect the name of the new file to redirect to
+ * @param mode the mode of the permissions
+ * @param source the file to redirect
+ * @param return: 0 if failure to redirect input or output, !0 otherwise.
+ */
+int redirFile(const char* redirect, const char * mode, FILE* source);
+
+/*
  * Waits for any open child process to finish and accepts their exit codes. This should
  * be run after execCmd(..) to prevent zombie processes and the grader's wrath.
  *
@@ -120,7 +131,7 @@ void processCmd(const Param_t* inputCmd) {
     // Check if the program in arg[0] exists
     if (access(inputCmd->argumentVector[0], X_OK) != 0) {
         // File does not exist, or user lacks exe permissions
-        printf("myshell: \"%s\" cannot execute.\n%s\n", 
+        printf("myshell: \"%s\" is not a recognized command.\n%s\n", 
             inputCmd->argumentVector[0], 
             SHELL_USAGE);
         return;
@@ -138,6 +149,26 @@ void processCmd(const Param_t* inputCmd) {
     
     if (n < 1) {
         printf("myshell: count must be > 0\n%s\n", SHELL_USAGE);
+        return;
+    }
+    
+    // Check if input redirect file is valid
+    if (inputCmd->inputRedirect != NULL &&
+        access(inputCmd->inputRedirect, R_OK) != 0) {
+        // File does not exist, or shell lacks read permissions
+        printf("myshell: %s: Not available for reading.\n%s\n", 
+            inputCmd->inputRedirect, 
+            SHELL_USAGE);
+        return;
+    }
+    
+    // Check if output redirect matches input redirect
+    if (inputCmd->outputRedirect != NULL &&
+        inputCmd->inputRedirect != NULL &&
+        strcmp(inputCmd->outputRedirect, inputCmd->inputRedirect) == 0) {
+        // Input and output files match, but should not
+        printf("myshell: inputRedirect should not match outputRedirect.\n%s\n", 
+            SHELL_USAGE);
         return;
     }
     
@@ -161,15 +192,18 @@ void execCmd(int n, const Param_t* inputCmd) {
         
         if (pid == 0) {
             // If in child process
-            printf("In Child: PID = %d\n", pid);
             
             // Format the user command for the child process
             // Note the exec frees childArgv
             char** childArgv = formatChildArgV(inputCmd, i);
             
-            // Verify to make sure the execute is successful
-            execv(*childArgv, childArgv);
+            if (redirFile(inputCmd->inputRedirect, "rb", stdin) &&
+                redirFile(inputCmd->outputRedirect, "a", stdout)) {
+                // Launch the new exec
+                execv(*childArgv, childArgv);
+            }
             
+            //inputCmd->inputRedirect
             printf("Exec has failed to launch a new process.\n");
             
             // Stop-gap fork bomb stopper, in case of a exec error
@@ -194,4 +228,22 @@ void waitChildren(int n) {
         pid_t pid = wait(&status);
         printf("In Wait: PID = %d\n", pid);
     }
+}
+
+int redirFile(const char* redirect, const char * mode, FILE* source) {
+    FILE* redirStatus;
+    
+    // Redirect output to a file if specified
+    if (redirect != NULL) {
+        // Open with append permissions to prevent overwriting
+        redirStatus = freopen(redirect, mode, source); 
+        
+        if (redirStatus == NULL) {
+            // outputRedirect failed
+            printf("Redirecting to %s has failed.\n", redirect);
+            return 0;
+        }
+    }
+    
+    return 1;
 }

@@ -172,6 +172,8 @@ void processCmd(const Param_t* inputCmd) {
         return;
     }
     
+    
+    
     // Fork the process n times and exec
     execCmd(n, inputCmd);
 }

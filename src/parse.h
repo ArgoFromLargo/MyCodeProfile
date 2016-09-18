@@ -5,6 +5,10 @@
 
 #ifndef PARSE_H
 #define PARSE_H
+
+/**
+ * MAXARGS defined to represent the upper bound allowed for arguments read.
+ */
 #define MAXARGS 32
 
 /**
@@ -27,8 +31,17 @@ struct PARAM {
  */
 typedef struct PARAM Param_t;
 
+/**
+ * Prints the data currently stored in the Param_t structure.
+ * Used when the shell is run in -Debug mode.
+ */
 void printParams(Param_t* param);
 
+/**
+ * Breaks down the commands entered within the myshell program.
+ * Stores input and output redirects (if included).
+ * Stores arguments into an array.
+ */
 void tokenize(char command[], const char delimiters[], Param_t *param);
 
 int isInt(const char* str);

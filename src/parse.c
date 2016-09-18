@@ -16,11 +16,11 @@
  */
 #define INT_MAX_CHARS 11
 
-/*
+/**
  * Prints the contents of the Param_t* that is passed
  *
- * Parameters: Param_t*
- * Return: void
+ * @param Param_t*
+ * @return void
  */
 void printParams(Param_t *param) {
     int i;
@@ -33,11 +33,11 @@ void printParams(Param_t *param) {
            printf("ArgumentVector[%2d]: [%s]\n", i, param->argumentVector[i]);
 }
 
-/*
+/**
  * Tokenizes the string of chars the user types into the shell
  *
- * Parameters: char[], const char[], Param_t*
- * Return: void
+ * @param char[], const char[], Param_t*
+ * @return void
  */
 void tokenize(char command[], const char delimiters[], Param_t *param) {
     // set the Param_t* to default values before tokenizing
@@ -71,7 +71,7 @@ void tokenize(char command[], const char delimiters[], Param_t *param) {
     }
 }
 
-/*
+/**
  * Determines if a given string can be converted to a valid integer.
  * The integer may start with a plus or minus sign. The length of the
  * integer is not accounted for.
@@ -91,7 +91,7 @@ int isInt(const char* str) {
    return 1;  // All characters met the criteria
 }
 
-/*
+/**
  * Formats the argument vector (argv) for new execv processes. Each new process 
  * has a new index, so this value needs to be computed dynamically.
  *

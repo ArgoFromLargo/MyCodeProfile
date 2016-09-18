@@ -17,6 +17,12 @@
 #define SHELL_USAGE "Usage: command count [child_argument]*"
 
 /*
+ * Defines the maximum number of base 10 digits required to represent
+ * a 32-bit unsigned integer: MAX = floor(log10(2^32-1))+2
+ */
+#define INT_MAX_CHARS 11
+
+/*
  * Processes a tokenized shell command. If the input is properly-formatted,
  * the shell will create and manage an arbitrary number of specified child
  * processes. In the case that the input is not correctly formatted, an error
@@ -66,6 +72,16 @@ void execCmd(int n, const Param_t* inputCmd);
 void waitChildren(int n);
 
 /*
+ * Formats the argument vector (argv) for new execv processes. Each new process 
+ * has a new index, so this value needs to be computed dynamically.
+ *
+ * @param inputCmd the validated, tokenized input from myshell. 
+ * @param curI the current index of the process (see execCmd description)
+ * @return A reference to the newly-concatenated string
+ */
+char* formatChildArgV(const Param_t* inputCmd, int curI);
+
+/*
  * The entrance point for the shell. The user is prompted for
  * a myshell command. If they enter the exit command, the session
  * terminates. Otherwise, they can use the shell to start and manage
@@ -110,8 +126,7 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-void processCmd(const Param_t* inputCmd)
-{
+void processCmd(const Param_t* inputCmd) {
     // Make sure the minimum number of arguments have been added
     if (inputCmd->argumentCount < 2) {
         printf("myshell: missing operand\n%s\n", SHELL_USAGE);
@@ -143,11 +158,11 @@ void processCmd(const Param_t* inputCmd)
     }
     
     // Fork the process n times and exec
-    execCmd(n, inputCmd);
+    formatChildArgV(inputCmd, 12);
+    //execCmd(n, inputCmd);
 }
 
-void execCmd(int n, const Param_t* inputCmd)
-{
+void execCmd(int n, const Param_t* inputCmd) {
     int forkCount = 0; // The number of forks that were actually successful.
     int i;
     
@@ -161,8 +176,6 @@ void execCmd(int n, const Param_t* inputCmd)
             break;
         }
         
-        forkCount++;
-        
         if (pid == 0) {
             // If the child process
             printf("In Child: PID = %d\n", pid);
@@ -172,6 +185,8 @@ void execCmd(int n, const Param_t* inputCmd)
             // If the parent process
             printf("In Parent: Child PID = %d\n", pid);
         }
+        
+        forkCount++;
     }
     
     // Wait for all successful children to finish before returning
@@ -179,8 +194,7 @@ void execCmd(int n, const Param_t* inputCmd)
 }
 
 // Does wait return immediately if no processes are available?
-void waitChildren(int n)
-{
+void waitChildren(int n) {
     int status;
     int i;
     
@@ -191,4 +205,50 @@ void waitChildren(int n)
         pid_t pid = wait(&status);
         printf("In Wait: PID = %d\n", pid);
     }
+}
+
+char* formatChildArgV(const Param_t* inputCmd, int curI) {
+    // Allocate memory for the int string (plus the null pointer)
+    char curIStr[INT_MAX_CHARS+1];
+    sprintf(curIStr, "%d", curI);
+
+    // Calculate the size of the output
+    int argBufferLen = strlen(curIStr);
+
+    int j,k;
+
+    // Add the lengths of the argument vector members
+    for (j=1; j<inputCmd->argumentCount; j++) {
+        argBufferLen += strlen(inputCmd->argumentVector[j]);
+    }
+
+    // Allocate memory for the concatenated array
+    // Adding argumentCount is for spaces
+    char* argv = (char*) malloc(argBufferLen+inputCmd->argumentCount+1);
+    
+    // Get a reference to the first char position
+    char* cpPos = argv;
+    
+    // Copy all of the tokens into the new array
+    for (j=1; j<inputCmd->argumentCount; j++) {
+    
+        // insert curI into the second position
+        if (j == 2) {
+            strcpy(cpPos, curIStr);
+            cpPos += strlen(curIStr);
+            *(cpPos++) = ' ';
+        }
+    
+        // For each character k in the jth arg vector
+        for(k=0; inputCmd->argumentVector[j][k] != '\0'; k++) {
+            *(cpPos++) = inputCmd->argumentVector[j][k]; // Copy char to argv
+        }
+                
+        // Add space to separate tokens
+        *(cpPos++) = ' ';
+    }
+    
+    *(--cpPos) = '\0';
+    printf("argv:%s\n", argv);
+    return argv;
 }

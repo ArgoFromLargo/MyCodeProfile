@@ -43,6 +43,9 @@ void processCmd(const Param_t* inputCmd);
  * Executes the given child process a given number of times with the given arguments.
  * The command should be properly formatted by the time this stage is reached. The actual
  * fork-exec occurs at this point, so mal-formatted input could forkbomb to the host OS.
+ * n forks will be attempted, but in the case one fails to launch, the unlaunched processes
+ * will be canceled. execCmd automatically waits for started processes to prevent zombies.
+ * When all have run, the function returns.
  *
  * Each child process recieves the presented arguments in the following manner:
  *   - child_process n i [child_argument]*
@@ -141,28 +144,51 @@ void processCmd(const Param_t* inputCmd)
     
     // Fork the process n times and exec
     execCmd(n, inputCmd);
-    
-    // Wait for all the children to finish before returning
-    waitChildren(n);
 }
+
+// Address the issue where n processes where attempted, but only i launched
 
 void execCmd(int n, const Param_t* inputCmd)
 {
-    pid_t pid = fork();
-    if (pid == 0) {
-        printf("In Child: PID = %d\n", pid);
-        exit(0);
-    } else
-    {
-        printf("In Parent: Child PID = %d\n", pid);
+    int forkCount = 0; // The number of forks that were actually successful.
+    int i;
+    
+    // Fork n times
+    for (i=0; i<n; i++) {
+        pid_t pid = fork();
+        
+        if (pid == -1) {
+            // The current fork failed.
+            printf("Unable to launch the %d\n process. Cancelling queue.", forkCount);
+            break;
+        }
+        
+        forkCount++;
+        
+        if (pid == 0) {
+            // If the child process
+            printf("In Child: PID = %d\n", pid);
+            exit(0);
+        } else
+        {
+            // If the parent process
+            printf("In Parent: Child PID = %d\n", pid);
+        }
     }
+    
+    // Wait for all successful children to finish before returning
+    waitChildren(forkCount);
 }
 
+// Does wait return immediately if no processes are available?
 void waitChildren(int n)
 {
     // Wait for all n processes to close
     int status;
-  
-    pid_t pid = wait(&status);
-    printf("In Wait: PID = %d\n", pid);
+    int i;
+    
+    for (i=0; i<n; i++) {
+        pid_t pid = wait(&status);
+        printf("In Wait: PID = %d\n", pid);
+    }
 }

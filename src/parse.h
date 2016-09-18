@@ -1,6 +1,6 @@
 /* 
  * File:   parse.h
- * Author: lkledzik
+ * Authors: Luke Kledzik, Adam Mooers
  */
 
 #ifndef PARSE_H

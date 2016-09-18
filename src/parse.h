@@ -5,7 +5,7 @@
 
 #ifndef PARSE_H
 #define PARSE_H
-#define MAXARGS 32                 /* structure to hold input data */
+#define MAXARGS 32
 
 /**
  * This struct holds the data gathered from stdin after running myshell.

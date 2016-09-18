@@ -172,6 +172,12 @@ void processCmd(const Param_t* inputCmd) {
         return;
     }
     
+    // Check if output redirect file already is exists, delete if so
+    if (inputCmd->outputRedirect != NULL &&
+        access(inputCmd->outputRedirect, F_OK) == 0) {
+        remove(inputCmd->outputRedirect);
+    }
+
     // Fork the process n times and exec
     execCmd(n, inputCmd);
 }

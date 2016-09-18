@@ -1,6 +1,9 @@
 /**
  * File: parse.c
  * 
+ * This file includes the tools needed to parse the info entered
+ * into myshell.
+ * 
  * @author lkledzik
  * @author amooers
  * @date 9/18/2016

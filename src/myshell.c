@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
     
     // Enter the terminal loop
     while(1) {
-        printf("\nEnter a command with no more than %d arguments.\n", MAXARGS);
+        printf("\n$$$ ", MAXARGS);
         fgets(command, CMD_BUFFER_LEN, stdin);
         
         // Check to see if the exit command is issued

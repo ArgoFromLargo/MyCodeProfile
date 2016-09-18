@@ -22,4 +22,6 @@ int main(int argc, char* argv[])
     }
     
     putchar('\n');
+    
+    return 0;
 }

@@ -1,6 +1,10 @@
-/* 
+/** 
  * File:   parse.h
- * Authors: Luke Kledzik, Adam Mooers
+ *
+ * @author lkledzik
+ * @author amooers
+ * @date 9/18/2016
+ * @info Course COP4634
  */
 
 #ifndef PARSE_H

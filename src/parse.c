@@ -99,48 +99,12 @@ int isInt(const char* str) {
  * @param curI the current index of the process (see execCmd description)
  * @return A reference to the newly-concatenated string
  */
-char* formatChildArgV(const Param_t* inputCmd, int curI) {
+char** formatChildArgV(const Param_t* inputCmd, int curI) {
     // Allocate memory for the int string (plus the null pointer)
-    char curIStr[INT_MAX_CHARS+1];
+    char* curIStr = (char*)malloc(INT_MAX_CHARS+1);
     sprintf(curIStr, "%d", curI);
 
-    // Calculate the size of the output
-    int argBufferLen = strlen(curIStr);
-
-    int j,k;
-
-    // Add the lengths of the argument vector members
-    for (j=1; j<inputCmd->argumentCount; j++) {
-        argBufferLen += strlen(inputCmd->argumentVector[j]);
-    }
-
-    // Allocate memory for the concatenated array
-    // Adding argumentCount is for spaces
-    char* argv = (char*) malloc(argBufferLen+inputCmd->argumentCount+1);
+    char** const argv = (char **)malloc(sizeof(char*)*inputCmd->argumentCount);
     
-    // Get a reference to the first char position
-    char* cpPos = argv;
-    
-    // Copy all of the tokens into the new array
-    for (j=1; j<inputCmd->argumentCount; j++) {
-    
-        // insert curI into the second position
-        if (j == 2) {
-            strcpy(cpPos, curIStr);
-            cpPos += strlen(curIStr);
-            *(cpPos++) = ' ';
-        }
-    
-        // For each character k in the jth arg vector
-        for(k=0; inputCmd->argumentVector[j][k] != '\0'; k++) {
-            *(cpPos++) = inputCmd->argumentVector[j][k]; // Copy char to argv
-        }
-                
-        // Add space to separate tokens
-        *(cpPos++) = ' ';
-    }
-    
-    *(--cpPos) = '\0';
-    printf("argv:%s\n", argv);
     return argv;
 }

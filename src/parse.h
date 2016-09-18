@@ -22,6 +22,6 @@ void tokenize(char command[], const char delimiters[], Param_t *param);
 
 int isInt(const char* str);
 
-char* formatChildArgV(const Param_t* inputCmd, int curI);
+char** formatChildArgV(const Param_t* inputCmd, int curI);
 
 #endif

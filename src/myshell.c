@@ -142,8 +142,7 @@ void processCmd(const Param_t* inputCmd) {
     }
     
     // Fork the process n times and exec
-    formatChildArgV(inputCmd, 12);
-    //execCmd(n, inputCmd);
+    execCmd(n, inputCmd);
 }
 
 void execCmd(int n, const Param_t* inputCmd) {
@@ -161,13 +160,19 @@ void execCmd(int n, const Param_t* inputCmd) {
         }
         
         if (pid == 0) {
-            // If the child process
+            // If in child process
             printf("In Child: PID = %d\n", pid);
+            
+            // Format the user command for the child process
+            // Note the exec frees childArgv
+            //char* childArgv = formatChildArgV(inputCmd, i);
+            //printf("Child String: %s %s\n", inputCmd->argumentVector[0], childArgv);
+            
+            // Verify to make sure the execute is successful
+            execv(inputCmd->argumentVector[0], inputCmd->argumentVector);
+            
+            // Stop-gap fork bomb stopper, in case of a logic error
             exit(0);
-        } else
-        {
-            // If the parent process
-            printf("In Parent: Child PID = %d\n", pid);
         }
         
         forkCount++;

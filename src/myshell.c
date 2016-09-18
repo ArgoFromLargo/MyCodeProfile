@@ -238,7 +238,7 @@ void waitChildren(int n) {
     // Note that the ith index may not match the ith process created
     // Use ps-axu | grep "Z" in terminal to view potential zombies
     for (i=0; i<n; i++) {
-        pid_t pid = wait(&status);
+        wait(&status);
         //printf("In Wait: PID = %d\n", pid);
     }
 }

@@ -146,8 +146,6 @@ void processCmd(const Param_t* inputCmd)
     execCmd(n, inputCmd);
 }
 
-// Address the issue where n processes where attempted, but only i launched
-
 void execCmd(int n, const Param_t* inputCmd)
 {
     int forkCount = 0; // The number of forks that were actually successful.
@@ -183,10 +181,12 @@ void execCmd(int n, const Param_t* inputCmd)
 // Does wait return immediately if no processes are available?
 void waitChildren(int n)
 {
-    // Wait for all n processes to close
     int status;
     int i;
     
+    // Wait for all n processes to close
+    // Note that the ith index may not match the ith process created
+    // Use ps-axu | grep "Z" in terminal to view potential zombies
     for (i=0; i<n; i++) {
         pid_t pid = wait(&status);
         printf("In Wait: PID = %d\n", pid);

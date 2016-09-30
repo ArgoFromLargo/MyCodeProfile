@@ -9,6 +9,9 @@ of their existence and the difficulties they present. */
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
+#include <time.h>
+
+
 #include <sys/types.h> 
 
 #define HIST_SIZE 1000
@@ -43,7 +46,12 @@ void getStoppingTimes(int* arr, int len) {
 int main(int argc, char** argv) {
 
    int argN = 0, argT = 0;
-
+   
+   struct timespec tStart, tEnd;
+   
+   // Get the start time
+   clock_gettime(CLOCK_REALTIME, &tStart);
+     
    if(argc < 3) {
       printf("Missing arguments. Format: ./mtCollatz [range] [number of threads]\n");
       exit(0);
@@ -68,7 +76,14 @@ int main(int argc, char** argv) {
    for(i = 0; i < argT; i++) {
       pthread_join(threads[i], NULL);
    }
-   getStoppingTimes(stoppingTimes, HIST_SIZE);
+   //getStoppingTimes(stoppingTimes, HIST_SIZE);
+
+   free(stoppingTimes);
+   free(threads);
+   
+    // Get the end time
+   clock_gettime(CLOCK_REALTIME, &tEnd);
+   printf("Elapsed Time: %lf\n", (tEnd.tv_sec-tStart.tv_sec)+(tEnd.tv_nsec-tStart.tv_nsec)*(10E-9));
 
    return 0;
 }

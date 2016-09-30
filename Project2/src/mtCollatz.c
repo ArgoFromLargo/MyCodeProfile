@@ -9,21 +9,44 @@ of their existence and the difficulties they present. */
 #include <stdlib.h>
 #include <string.h>
 
+int* stoppingTimes;
+int nCount = 1;
+
+void* collatz(void* n) {
+   while(nCount <= *(int *)n) {
+      int i = 1;
+      int prev = ++nCount;
+   
+      while(prev > 1) {
+         if(prev % 2 == 0) // prev is EVEN
+            prev /= 2;
+         else              // prev is ODD
+            prev = prev * 3 + 1;
+         i++;
+      }
+   }
+}
+
 int main(int argc, char** argv) {
 
-	int argn = 0, argt = 0;
+   int argN = 0, argT = 0;
 
-	if(argc < 3) {
-		printf("Missing arguments. Format: ./mtCollatz [range] [number of threads]\n");
-		exit(0);
-	}
+   if(argc < 3) {
+      printf("Missing arguments. Format: ./mtCollatz [range] [number of threads]\n");
+      exit(0);
+   }
 
-	if(argv[1] != NULL)
-		argn = atoi(argv[1]); // the range of numbers for which a collatz sequence must be completed.
-	if(argv[2] != NULL)
-		argt = atoi(argv[2]); // the number of threads to create to compute the results in parallel.
-	printf("Range of numbers: %d\n", argn);
-	printf("Number of threads: %d\n", argt);
+   if(argv[1] != NULL)
+      argN = atoi(argv[1]); // the range of numbers for which a collatz sequence must be completed.
+   if(argv[2] != NULL)
+      argT = atoi(argv[2]); // the number of threads to create to compute the results in parallel.
+	
+   stoppingTimes = malloc(argN * sizeof(int));
+   
+   printf("Range of numbers: %d\n", argN);
+   printf("Number of threads: %d\n", argT);
 
-	return 0;
+   collatz((void*)&argN);
+
+   return 0;
 }

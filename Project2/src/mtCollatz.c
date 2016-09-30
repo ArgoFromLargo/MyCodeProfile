@@ -8,6 +8,10 @@ of their existence and the difficulties they present. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
+#include <sys/types.h> 
+
+#define HIST_SIZE 1000
 
 int* stoppingTimes;
 int nCount = 1;
@@ -24,6 +28,15 @@ void* collatz(void* n) {
             prev = prev * 3 + 1;
          i++;
       }
+      stoppingTimes[i]++;
+   }
+   pthread_exit(0);
+}
+
+void getStoppingTimes(int* arr, int len) {
+   int i;
+   for(i = 2; i <= len; i++) {
+      printf("Index: %d Freq: %d\n", i, arr[i]);
    }
 }
 
@@ -41,12 +54,21 @@ int main(int argc, char** argv) {
    if(argv[2] != NULL)
       argT = atoi(argv[2]); // the number of threads to create to compute the results in parallel.
 	
-   stoppingTimes = malloc(argN * sizeof(int));
+   
+   stoppingTimes = calloc(HIST_SIZE, sizeof(int));
+   pthread_t* threads = malloc(argT * sizeof(pthread_t));
    
    printf("Range of numbers: %d\n", argN);
    printf("Number of threads: %d\n", argT);
-
-   collatz((void*)&argN);
+   
+   int i;
+   for(i = 0; i < argT; i++) {
+      pthread_create(&threads[i], NULL, collatz, (void *)&argN);
+   }
+   for(i = 0; i < argT; i++) {
+      pthread_join(threads[i], NULL);
+   }
+   getStoppingTimes(stoppingTimes, HIST_SIZE);
 
    return 0;
 }

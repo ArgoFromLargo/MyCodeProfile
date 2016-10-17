@@ -105,7 +105,7 @@ void * catThread( void * param );
  * Declare global variables here
  */
 
-sem_t driveway;
+sem_t driveway; // LK
 
 /**************************************************/
 /* Please leave these variables alone.  They are  */
@@ -170,7 +170,7 @@ int main(int argc, char **argv)
    */
   pthread_mutex_t catLock; // LK
   pthread_mutex_t lizardLock; // LK
-
+  sem_init(&driveway, 0, 20); // LK
 
   /*
    * Create NUM_LIZARDS lizard threads
@@ -273,7 +273,7 @@ void * lizardThread( void * param )
        * are already completed - see the comments.
        */
       lizard_sleep(num); // LK
-      sago_2_monkeyGrass_is_safe(num)
+      sago_2_monkeyGrass_is_safe(num); // LK
       
 
 

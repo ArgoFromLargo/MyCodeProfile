@@ -105,6 +105,8 @@ void * catThread( void * param );
  * Declare global variables here
  */
 
+sem_t driveway;
+
 /**************************************************/
 /* Please leave these variables alone.  They are  */
 /* used to check the proper functioning of your   */
@@ -135,8 +137,9 @@ int main(int argc, char **argv)
   /*
    * Declare local variables
    */
-
-
+  int i, j; // LK
+  pthread_t *cat[NUM_CATS]; // LK
+  pthread_t *lizard[NUM_LIZARDS]; // LK
 
 
   /*
@@ -165,19 +168,27 @@ int main(int argc, char **argv)
   /*
    * Initialize locks and/or semaphores
    */
-
-
+  pthread_mutex_t catLock; // LK
+  pthread_mutex_t lizardLock; // LK
 
 
   /*
    * Create NUM_LIZARDS lizard threads
    */
 
+  // LK
+  for(i = 0; i < NUM_LIZARDS; i++) {
+    pthread_create(lizard[i], NULL, lizardThread, (void *)&i);
+  }
 
   /*
    * Create NUM_CATS cat threads
    */
-
+  
+  // LK
+  for(j = 0; j < NUM_CATS; j++) {
+    pthread_create(cat[j], NULL, catThread, (void *)&j);
+  }
 
 
   /*
@@ -261,8 +272,9 @@ void * lizardThread( void * param )
        * some functions by filling in the code.  Some  
        * are already completed - see the comments.
        */
-
-
+      lizard_sleep(num); // LK
+      sago_2_monkeyGrass_is_safe(num)
+      
 
 
 

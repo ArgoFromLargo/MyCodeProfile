@@ -177,7 +177,7 @@ int main(int argc, char **argv)
 
   // LK
   for(i = 0; i < NUM_LIZARDS; i++) {
-    // pthread_mutex_lock(&liz_lock);
+    pthread_mutex_lock(&liz_lock);
     pthread_create(&lizard[i], NULL, lizardThread, (void *)(&i));
   }
 
@@ -187,7 +187,7 @@ int main(int argc, char **argv)
   
   // LK
   for(j = 0; j < NUM_CATS; j++) {
-    // pthread_mutex_lock(&cat_lock);
+    pthread_mutex_lock(&cat_lock);
     pthread_create(&cat[j], NULL, catThread, (void *)(&j));
   }
 
@@ -262,8 +262,8 @@ void made_it_2_sago(int num);
  */
 void * lizardThread( void * param )
 {
-  // pthread_mutex_unlock(&liz_lock);
   int num = *(int*)param;
+  pthread_mutex_unlock(&liz_lock);
 
   if (debug)
     {
@@ -283,9 +283,11 @@ void * lizardThread( void * param )
       lizard_sleep(num); // LK
       sago_2_monkeyGrass_is_safe(num); // LK
       cross_sago_2_monkeyGrass(num); // LK
+      made_it_2_monkeyGrass(num); // LK
       lizard_eat(num); // LK
       monkeyGrass_2_sago_is_safe(num); // LK
       cross_monkeyGrass_2_sago(num); // LK
+      made_it_2_sago(num); // LK
     }
 
   pthread_exit(NULL);
@@ -303,9 +305,8 @@ void * lizardThread( void * param )
  */
 void * catThread( void * param )
 {
-  // pthread_mutex_unlock(&cat_lock);
   int num = *(int*)param;
-
+  pthread_mutex_unlock(&cat_lock);
   if (debug)
     {
       printf("[%2d] cat is alive\n", num);

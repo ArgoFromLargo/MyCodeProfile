@@ -104,7 +104,7 @@ void * catThread( void * param );
 /*
  * Declare global variables here
  */
-
+pthread_mutex_t liz_lock, cat_lock; // LK
 sem_t driveway; // LK
 
 /**************************************************/
@@ -138,8 +138,8 @@ int main(int argc, char **argv)
    * Declare local variables
    */
   int i, j; // LK
-  pthread_t *cat[NUM_CATS]; // LK
-  pthread_t *lizard[NUM_LIZARDS]; // LK
+  pthread_t cat[NUM_CATS]; // LK
+  pthread_t lizard[NUM_LIZARDS]; // LK
 
 
   /*
@@ -168,9 +168,8 @@ int main(int argc, char **argv)
   /*
    * Initialize locks and/or semaphores
    */
-  pthread_mutex_t catLock; // LK
-  pthread_mutex_t lizardLock; // LK
-  sem_init(&driveway, 0, 20); // LK
+  
+  sem_init(&driveway, 0, MAX_LIZARD_CROSSING); // LK
 
   /*
    * Create NUM_LIZARDS lizard threads
@@ -178,7 +177,8 @@ int main(int argc, char **argv)
 
   // LK
   for(i = 0; i < NUM_LIZARDS; i++) {
-    pthread_create(lizard[i], NULL, lizardThread, (void *)&i);
+    // pthread_mutex_lock(&liz_lock);
+    pthread_create(&lizard[i], NULL, lizardThread, (void *)(&i));
   }
 
   /*
@@ -187,7 +187,8 @@ int main(int argc, char **argv)
   
   // LK
   for(j = 0; j < NUM_CATS; j++) {
-    pthread_create(cat[j], NULL, catThread, (void *)&j);
+    // pthread_mutex_lock(&cat_lock);
+    pthread_create(&cat[j], NULL, catThread, (void *)(&j));
   }
 
 
@@ -207,8 +208,12 @@ int main(int argc, char **argv)
    * Wait until all threads terminate
    */
 
-
-
+  for(i = 0; i < NUM_LIZARDS; i++) {
+    pthread_join(lizard[i], NULL);
+  }
+  for(j = 0; j < NUM_CATS; j++) {
+    pthread_join(cat[j], NULL);
+  }
 
 
 
@@ -216,7 +221,9 @@ int main(int argc, char **argv)
     * Delete the locks and semaphores
     */
 
-
+  pthread_mutex_destroy(&liz_lock);
+  pthread_mutex_destroy(&cat_lock);
+  sem_destroy(&driveway);
 
   /*
    * Exit happily
@@ -255,6 +262,7 @@ void made_it_2_sago(int num);
  */
 void * lizardThread( void * param )
 {
+  // pthread_mutex_unlock(&liz_lock);
   int num = *(int*)param;
 
   if (debug)
@@ -274,23 +282,10 @@ void * lizardThread( void * param )
        */
       lizard_sleep(num); // LK
       sago_2_monkeyGrass_is_safe(num); // LK
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      cross_sago_2_monkeyGrass(num); // LK
+      lizard_eat(num); // LK
+      monkeyGrass_2_sago_is_safe(num); // LK
+      cross_monkeyGrass_2_sago(num); // LK
     }
 
   pthread_exit(NULL);
@@ -308,6 +303,7 @@ void * lizardThread( void * param )
  */
 void * catThread( void * param )
 {
+  // pthread_mutex_unlock(&cat_lock);
   int num = *(int*)param;
 
   if (debug)
@@ -320,7 +316,7 @@ void * catThread( void * param )
     {
 	  cat_sleep(num);
 
-
+          pthread_mutex_lock(&liz_lock); // LK
 
 	  /*
 	   * Check for too many lizards crossing
@@ -330,6 +326,7 @@ void * catThread( void * param )
 		  printf( "\tThe cats are happy - they have toys.\n" );
 		  exit( -1 );
 	    }
+          pthread_mutex_unlock(&liz_lock); // LK
     }
 
   pthread_exit(NULL);
@@ -413,7 +410,7 @@ void sago_2_monkeyGrass_is_safe(int num)
       fflush( stdout );
     }
 
-	
+  sem_wait(&driveway); // LK
 
 
   if (debug)
@@ -444,11 +441,14 @@ void cross_sago_2_monkeyGrass(int num)
   /*
    * One more crossing this way
    */
+  pthread_mutex_lock(&liz_lock); // LK
   numCrossingSago2MonkeyGrass++;
+  pthread_mutex_unlock(&liz_lock); // LK
 
   /*
    * Check for lizards cross both ways
    */
+  pthread_mutex_lock(&liz_lock); // LK
   if (numCrossingMonkeyGrass2Sago && UNIDIRECTIONAL)
     {
 	  printf( "\tCrash!  We have a pile-up on the concrete.\n" );
@@ -456,7 +456,7 @@ void cross_sago_2_monkeyGrass(int num)
 	  printf( "\t%d crossing monkey grass -> sago\n", numCrossingMonkeyGrass2Sago );
 	  exit( -1 );
     }
-
+  pthread_mutex_unlock(&liz_lock); // LK
 
   /*
    * It takes a while to cross, so simulate it
@@ -466,7 +466,9 @@ void cross_sago_2_monkeyGrass(int num)
   /*
    * That one seems to have made it
    */
+  pthread_mutex_lock(&liz_lock); // LK
   numCrossingSago2MonkeyGrass--;
+  pthread_mutex_unlock(&liz_lock); // LK
 }
 
 
@@ -490,7 +492,7 @@ void made_it_2_monkeyGrass(int num)
     }
 
 
-
+  sem_post(&driveway); // LK
 
 
 }
@@ -548,7 +550,7 @@ void monkeyGrass_2_sago_is_safe(int num)
     }
 
 
-
+  sem_wait(&driveway); // LK
 
 
   if (debug)
@@ -580,12 +582,14 @@ void cross_monkeyGrass_2_sago(int num)
   /*
    * One more crossing this way
    */
+  pthread_mutex_lock(&liz_lock); // LK
   numCrossingMonkeyGrass2Sago++;
+  pthread_mutex_unlock(&liz_lock); // LK
 
-  
   /*
    * Check for lizards cross both ways
    */
+  pthread_mutex_lock(&liz_lock); // LK
   if (numCrossingSago2MonkeyGrass && UNIDIRECTIONAL)
     {
       printf( "\tOh No!, the lizards have cats all over them.\n" );
@@ -593,7 +597,7 @@ void cross_monkeyGrass_2_sago(int num)
       printf( "\t%d crossing monkey grass -> sago\n", numCrossingMonkeyGrass2Sago );
       exit( -1 );
     }
-
+  pthread_mutex_unlock(&liz_lock); // LK
   /*
    * It takes a while to cross, so simulate it
    */
@@ -602,7 +606,9 @@ void cross_monkeyGrass_2_sago(int num)
   /*
    * That one seems to have made it
    */
+  pthread_mutex_lock(&liz_lock); // LK
   numCrossingMonkeyGrass2Sago--;
+  pthread_mutex_unlock(&liz_lock); // LK
 }
 
 
@@ -626,7 +632,7 @@ void made_it_2_sago(int num)
     }
 
 
-
+  sem_post(&driveway); // LK
 
 
 }

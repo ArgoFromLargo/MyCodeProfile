@@ -1,3 +1,19 @@
+/**
+ * lizards.c is a resource management simulation challenge. A finite number of
+ * lizards (each a thread) live in the sago palm. They sleep for a random amount
+ * of time. When they wake up, they must cross the driveway to reach the monkey grass.
+ * Once there, they eat for a random amount of time and return to the sago palm to rest.
+ * The problem is that a few cats (each a thread) watch the driveway. If too many lizards
+ * attempt to cross, the cats start to play with them, and the game is lost. The game is
+ * won when the world ends after a certain time interval. lizards.c makes extensive use
+ * of mutex locks and strategic use of semaphores.
+ *
+ * @author Adam Mooers
+ * @author Luke Kledzik
+ * @date 10/23/2016
+ * @info Course COP4634
+ */
+ 
 /***************************************************************/
 /*                                                             */
 /* lizard.c                                                    */
@@ -169,13 +185,18 @@ int main(int argc, char **argv)
    * Initialize locks and/or semaphores
    */
   
-  sem_init(&driveway, 0, MAX_LIZARD_CROSSING); // LK
+  //  No more than MAX_LIZARD_CROSSING should attempt to use
+  // the shared resource (the driveway) at a given time
+  sem_init(&driveway, 0, MAX_LIZARD_CROSSING); // LK AM
 
   /*
    * Create NUM_LIZARDS lizard threads
    */
 
-  // LK
+  // Create all of the lizard threads. Note that the mutex lock
+  // slows down the rate at which threads are created, but prevents
+  // naming contention.
+  // LK AM
   for(i = 0; i < NUM_LIZARDS; i++) {
     pthread_mutex_lock(&liz_lock);
     pthread_create(&lizard[i], NULL, lizardThread, (void *)(&i));
@@ -184,8 +205,12 @@ int main(int argc, char **argv)
   /*
    * Create NUM_CATS cat threads
    */
-  
-  // LK
+   
+  // Create all of the cats. Prevent naming contention like with
+  // the lizard threads. Using a separate lock, cat_lock, allows these 
+  // threads to be created as quickly as possible without the possibility 
+  // of deadlock due to the lizards using their lock for new purposes.
+  // LK AM
   for(j = 0; j < NUM_CATS; j++) {
     pthread_mutex_lock(&cat_lock);
     pthread_create(&cat[j], NULL, catThread, (void *)(&j));
@@ -316,8 +341,9 @@ void * catThread( void * param )
   while(running)
     {
 	  cat_sleep(num);
-
-          pthread_mutex_lock(&liz_lock); // LK
+      
+	  // The counters are a shared resource. Lock them until they are read.
+      pthread_mutex_lock(&liz_lock); // LK AM
 
 	  /*
 	   * Check for too many lizards crossing
@@ -327,7 +353,9 @@ void * catThread( void * param )
 		  printf( "\tThe cats are happy - they have toys.\n" );
 		  exit( -1 );
 	    }
-          pthread_mutex_unlock(&liz_lock); // LK
+      
+	  // The program did not exit, so free the lock
+	  pthread_mutex_unlock(&liz_lock); // LK AM
     }
 
   pthread_exit(NULL);
@@ -411,8 +439,8 @@ void sago_2_monkeyGrass_is_safe(int num)
       fflush( stdout );
     }
 
-  sem_wait(&driveway); // LK
-
+  // Wait until there is an opening to cross the road
+  sem_wait(&driveway); // LK AM
 
   if (debug)
     {
@@ -442,14 +470,25 @@ void cross_sago_2_monkeyGrass(int num)
   /*
    * One more crossing this way
    */
-  pthread_mutex_lock(&liz_lock); // LK
+   
+  // There is a shared counter here. Lock and access it.
+  pthread_mutex_lock(&liz_lock); // LK AM
   numCrossingSago2MonkeyGrass++;
-  pthread_mutex_unlock(&liz_lock); // LK
+  
+  if (debug)
+	{
+	   printf("Lizards crossing: %d\n", numCrossingSago2MonkeyGrass+numCrossingMonkeyGrass2Sago); // LK AM
+	}
+  
+  pthread_mutex_unlock(&liz_lock); // LK AM
 
   /*
    * Check for lizards cross both ways
    */
-  pthread_mutex_lock(&liz_lock); // LK
+  
+  // There is a shared counter in the if statement. Lock and access it.
+  pthread_mutex_lock(&liz_lock); // LK AM
+  
   if (numCrossingMonkeyGrass2Sago && UNIDIRECTIONAL)
     {
 	  printf( "\tCrash!  We have a pile-up on the concrete.\n" );
@@ -457,7 +496,9 @@ void cross_sago_2_monkeyGrass(int num)
 	  printf( "\t%d crossing monkey grass -> sago\n", numCrossingMonkeyGrass2Sago );
 	  exit( -1 );
     }
-  pthread_mutex_unlock(&liz_lock); // LK
+
+  // The program did not exit, unlock the counter
+  pthread_mutex_unlock(&liz_lock); // LK AM
 
   /*
    * It takes a while to cross, so simulate it
@@ -467,9 +508,11 @@ void cross_sago_2_monkeyGrass(int num)
   /*
    * That one seems to have made it
    */
-  pthread_mutex_lock(&liz_lock); // LK
+  
+  // There is a shared counter here. Lock and access it.
+  pthread_mutex_lock(&liz_lock); // LK AM
   numCrossingSago2MonkeyGrass--;
-  pthread_mutex_unlock(&liz_lock); // LK
+  pthread_mutex_unlock(&liz_lock); // LK AM
 }
 
 
@@ -492,9 +535,8 @@ void made_it_2_monkeyGrass(int num)
       fflush( stdout );
     }
 
-
-  sem_post(&driveway); // LK
-
+  // Let the next lizard know that it is safe to cross
+  sem_post(&driveway); // LK AM
 
 }
 
@@ -550,8 +592,8 @@ void monkeyGrass_2_sago_is_safe(int num)
       fflush( stdout );
     }
 
-
-  sem_wait(&driveway); // LK
+  // Wait until it is safe to cross the road
+  sem_wait(&driveway); // LK AM
 
 
   if (debug)
@@ -583,14 +625,25 @@ void cross_monkeyGrass_2_sago(int num)
   /*
    * One more crossing this way
    */
-  pthread_mutex_lock(&liz_lock); // LK
+  
+  // A shared counter is being accessed. Lock it, read, then unlock.
+  pthread_mutex_lock(&liz_lock); // LK AM
   numCrossingMonkeyGrass2Sago++;
-  pthread_mutex_unlock(&liz_lock); // LK
+  
+  if (debug)
+    {
+	   printf("Lizards crossing: %d\n", numCrossingSago2MonkeyGrass+numCrossingMonkeyGrass2Sago); // LK AM
+    }
+
+  pthread_mutex_unlock(&liz_lock); // LK AM
 
   /*
    * Check for lizards cross both ways
    */
-  pthread_mutex_lock(&liz_lock); // LK
+  
+  // A shared counter is being accessed in the if statement. Lock it, read, then unlock.
+  pthread_mutex_lock(&liz_lock); // LK AM
+  
   if (numCrossingSago2MonkeyGrass && UNIDIRECTIONAL)
     {
       printf( "\tOh No!, the lizards have cats all over them.\n" );
@@ -598,7 +651,10 @@ void cross_monkeyGrass_2_sago(int num)
       printf( "\t%d crossing monkey grass -> sago\n", numCrossingMonkeyGrass2Sago );
       exit( -1 );
     }
-  pthread_mutex_unlock(&liz_lock); // LK
+
+  // The program did not exit. Unlock the lock.
+  pthread_mutex_unlock(&liz_lock); // LK AM
+  
   /*
    * It takes a while to cross, so simulate it
    */
@@ -607,9 +663,11 @@ void cross_monkeyGrass_2_sago(int num)
   /*
    * That one seems to have made it
    */
-  pthread_mutex_lock(&liz_lock); // LK
+  
+  // A shared counter is being accessed. Lock it, read, then unlock.
+  pthread_mutex_lock(&liz_lock); // LK AM
   numCrossingMonkeyGrass2Sago--;
-  pthread_mutex_unlock(&liz_lock); // LK
+  pthread_mutex_unlock(&liz_lock); // LK AM
 }
 
 
@@ -632,10 +690,6 @@ void made_it_2_sago(int num)
       fflush( stdout );
     }
 
-
-  sem_post(&driveway); // LK
-
-
+  // Let the next lizard know that crossing is safe
+  sem_post(&driveway); // LK AM
 }
-
-

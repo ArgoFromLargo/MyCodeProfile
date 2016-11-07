@@ -1,7 +1,21 @@
+/********************************************************
+Project 4
+Authors: Luke Kledzik & Adam Mooers
+Date: Nov. 6, 2016
+Filename: matrix.c
+
+Description: this program simulates the time it takes to
+access data that is adjacent in memory compared to data
+that is separated by 4KB. This separation of 4KB
+can cause a page fault due to its low proximity to the
+previously accessed data.
+********************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
+// FUNCTION PROTOTYPES
 void writeRow();
 void writeColumn();
 void readRow();
@@ -12,7 +26,7 @@ char matrix[20480][4096]; // GLOBAL ARRAY
 int main(int argc, char** argv) {
 
     int i, secs, milliSecs;
-    clock_t start, finish, total;
+    clock_t start, finish, total; // TIMER VARIABLES
 
     // WRITE BY ROW
 

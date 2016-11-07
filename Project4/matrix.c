@@ -94,6 +94,10 @@ int main(int argc, char** argv) {
 
 // READING AND WRITING FUNCTIONS
 
+/*
+Writes the char 'R' to every index in the global
+2-dimensional array row-by-row
+*/
 void writeRow() {
     int i, j;
     for(i = 0; i < 20480; i++) {
@@ -103,6 +107,10 @@ void writeRow() {
     }
 }
 
+/*
+Writes the char 'C' to every index in the global
+2-dimensional array column-by-column
+*/
 void writeColumn() {
     int i, j;
     for(i = 0; i < 4096; i++) {
@@ -112,6 +120,10 @@ void writeColumn() {
     }
 }
 
+/*
+Reads the char in every index in the global
+2-dimensional array row-by-row
+*/
 void readRow() {
     char readVal;
     int i, j;
@@ -123,6 +135,10 @@ void readRow() {
     readVal = readVal; // SHUTS UP COMPILER'S "SET BUT NOT USED"
 }
 
+/*
+Reads the char in every index in the global
+2-dimensional array column-by-column
+*/
 void readColumn() {
     char readVal;
     int i, j;

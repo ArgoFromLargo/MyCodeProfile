@@ -120,6 +120,7 @@ void readRow() {
             readVal = matrix[i][j];
         }
     }
+    readVal = readVal; // SHUTS UP COMPILER'S "SET BUT NOT USED"
 }
 
 void readColumn() {
@@ -130,4 +131,5 @@ void readColumn() {
             readVal = matrix[j][i];
         }
     }
+    readVal = readVal; // SHUTS UP COMPILER'S "SET BUT NOT USED"
 }

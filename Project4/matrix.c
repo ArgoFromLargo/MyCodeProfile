@@ -93,7 +93,7 @@ void writeColumn() {
     int i, j;
     for(i = 0; i < 4096; i++) {
         for(j = 0; j < 20480; j++) {
-            matrix[i][j] = 'C';
+            matrix[j][i] = 'C';
         }
     }
 }
@@ -113,7 +113,7 @@ void readColumn() {
     int i, j;
     for(i = 0; i < 4096; i++) {
         for(j = 0; j < 20480; j++) {
-            readVal = matrix[i][j];
+            readVal = matrix[j][i];
         }
     }
 }

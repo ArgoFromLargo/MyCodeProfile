@@ -1,0 +1,7 @@
+* When testing on personal computer *
+
+When creating the 20480 x 4096 char array within the main function,
+we get an error when trying to run the program: Seg fault: 11.
+
+When creating the 20480 x 4096 char array via malloc within the
+main function, there is no error produced when running the program.

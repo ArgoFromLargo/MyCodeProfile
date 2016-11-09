@@ -30,63 +30,63 @@ int main(int argc, char** argv) {
 
     // WRITE BY ROW
 
-    start = clock();
     for(i = 0; i < 10; i++) {
+        start = clock();
         writeRow();
+        finish = clock();
+
+        total = (finish - start); // AVERAGE THE TIMES
+        milliSecs = total * 1000 / CLOCKS_PER_SEC;
+        secs = milliSecs / 1000;
+        milliSecs = milliSecs % 1000;
+
+        printf("WR, %d.%d\n", secs, milliSecs);
     }
-    finish = clock();
-
-    total = (finish - start) / 10; // AVERAGE THE TIMES
-    milliSecs = total * 1000 / CLOCKS_PER_SEC;
-    secs = milliSecs / 1000;
-    milliSecs = milliSecs % 1000;
-
-    printf("Time to fill array row-by-row: %d.%d\n", secs, milliSecs);
 
     // WRITE BY COLUMN
 
-    start = clock();
     for(i = 0; i < 10; i++) {
+        start = clock();
         writeColumn();
+        finish = clock();
+
+        total = (finish - start); // AVERAGE THE TIMES
+        milliSecs = total * 1000 / CLOCKS_PER_SEC;
+        secs = milliSecs / 1000;
+        milliSecs = milliSecs % 1000;
+
+        printf("WC, %d.%d\n", secs, milliSecs);
     }
-    finish = clock();
-
-    total = (finish - start) / 10; // AVERAGE THE TIMES
-    milliSecs = total * 1000 / CLOCKS_PER_SEC;
-    secs = milliSecs / 1000;
-    milliSecs = milliSecs % 1000;
-
-    printf("Time to fill array column-by-column: %d.%d\n", secs, milliSecs);
 
     // READ BY ROW
 
-    start = clock();
     for(i = 0; i < 10; i++) {
+        start = clock();
         readRow();
+        finish = clock();
+
+        total = (finish - start); // AVERAGE THE TIMES
+        milliSecs = total * 1000 / CLOCKS_PER_SEC;
+        secs = milliSecs / 1000;
+        milliSecs = milliSecs % 1000;
+
+        printf("RR, %d.%d\n", secs, milliSecs);
     }
-    finish = clock();
-
-    total = (finish - start) / 10; // AVERAGE THE TIMES
-    milliSecs = total * 1000 / CLOCKS_PER_SEC;
-    secs = milliSecs / 1000;
-    milliSecs = milliSecs % 1000;
-
-    printf("Time to read array row-by-row: %d.%d\n", secs, milliSecs);
 
     // READ BY COLUMN
 
-    start = clock();
     for(i = 0; i < 10; i++) {
+        start = clock();
         readColumn();
+        finish = clock();
+
+        total = (finish - start); // AVERAGE THE TIMES
+        milliSecs = total * 1000 / CLOCKS_PER_SEC;
+        secs = milliSecs / 1000;
+        milliSecs = milliSecs % 1000;
+
+        printf("RC, %d.%d\n", secs, milliSecs);
     }
-    finish = clock();
-
-    total = (finish - start) / 10; // AVERAGE THE TIMES
-    milliSecs = total * 1000 / CLOCKS_PER_SEC;
-    secs = milliSecs / 1000;
-    milliSecs = milliSecs % 1000;
-
-    printf("Time to read array column-by-column: %d.%d\n", secs, milliSecs);
 
     return 0;
 

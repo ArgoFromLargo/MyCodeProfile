@@ -9,6 +9,15 @@ access data that is adjacent in memory compared to data
 that is separated by 4KB. This separation of 4KB
 can cause a page fault due to its low proximity to the
 previously accessed data.
+
+When the program is run, it will print to stdout every
+time it finishes indexing through the array and display
+the time it took to traverse the 2-dimensional array.
+The program will calculate the array traversal time 10
+times for each of the 4 traversal methods.
+
+In the runtimeExperiment.pdf, the data is analyzed to
+calculate averages and standard deviation.
 ********************************************************/
 
 #include <stdio.h>

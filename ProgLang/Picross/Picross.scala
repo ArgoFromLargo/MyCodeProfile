@@ -22,8 +22,8 @@ object Picross{
         var rowHints : Array[String] = getHints(scanner, rows)
         var columnHints : Array[String] = getHints(scanner, columns)
 
-        println(rowHints.mkString(", "))
-        println(columnHints.mkString(", "))
+        println("Row hints: " + rowHints.mkString(", "))
+        println("Column hints: " + columnHints.mkString(", "))
 
         printPuzzle(rows, columns, puzzle)
 

@@ -1,3 +1,5 @@
+
+
 import java.util.Scanner
 import java.io.File
 
@@ -19,11 +21,10 @@ object Picross{
         println(rows + " rows, " + columns + " columns.")
 
         var puzzle : Array[Array[Char]] = createPuzzle(rows, columns)
-        var rowHints : Array[String] = getHints(scanner, rows)
-        var columnHints : Array[String] = getHints(scanner, columns)
+        var hints : Array[Array[Char]] = getHints(rows, columns, scanner)
 
-        println("Row hints: " + rowHints.mkString(", "))
-        println("Column hints: " + columnHints.mkString(", "))
+        // println("Row hints: " + rowHints.mkString(", "))
+        // println("Column hints: " + columnHints.mkString(", "))
 
         printPuzzle(rows, columns, puzzle)
 
@@ -69,12 +70,14 @@ object Picross{
         }
     }
 
-    def getHints(scanner : Scanner, num : Int) : Array[String] = {
-        var hints = new Array[String](num)
+    def getHints(rows : Int, columns : Int, scanner : Scanner) : Array[Array[Char]] = {
+        var hints = Array.ofDim[Char](rows + columns, rows + columns)
+        var line : String = ""
         var x : Int = 0
+        var y : Int = 0
 
-        for(x <- 0 until num) {
-            hints(x) = scanner.nextLine
+        for(x <- 0 until rows + columns) {
+            line = scanner.nextLine
         }
 
         return hints

@@ -1,4 +1,12 @@
-
+/**
+ * Programming Languages - Spring 2017
+ * @author Luke Kledzik
+ *
+ * This program reads in the nonogram's info from a textfile
+ * that is specified as a command line argument. The program
+ * generates a puzzle at the desired dimensions then proceeds
+ * to solve it and print the solution.
+ */
 
 import java.util.Scanner
 import java.io.File

@@ -1,7 +1,7 @@
 
 
 import java.util.Scanner
-import java.io.File
+import java.io._
 
 object Picross{
     def main(args : Array[String]) = {
@@ -21,10 +21,16 @@ object Picross{
         println(rows + " rows, " + columns + " columns.")
 
         var puzzle : Array[Array[Char]] = createPuzzle(rows, columns)
-        var hints : Array[Array[Char]] = getHints(rows, columns, scanner)
+        var hints : Array[Array[Int]] = getHints(rows, columns, scanner)
 
         // println("Row hints: " + rowHints.mkString(", "))
         // println("Column hints: " + columnHints.mkString(", "))
+
+        printHints(rows, columns, hints)
+
+        var numHints : Array[Int] = getNumHints(rows + columns, hints)
+
+        println("Num hints per row/column: " + numHints.mkString(", "))
 
         printPuzzle(rows, columns, puzzle)
 
@@ -70,16 +76,89 @@ object Picross{
         }
     }
 
-    def getHints(rows : Int, columns : Int, scanner : Scanner) : Array[Array[Char]] = {
-        var hints = Array.ofDim[Char](rows + columns, rows + columns)
-        var line : String = ""
+    def printHints(rows : Int, columns : Int, puzzle : Array[Array[Int]]) : Unit = {
         var x : Int = 0
         var y : Int = 0
 
-        for(x <- 0 until rows + columns) {
-            line = scanner.nextLine
+        // Traverse through the 2D array
+        for(x <- 0 until rows + columns; y <- 0 until rows + columns) {
+            print(puzzle(x)(y) + " ")
+
+            if(y + 1 == rows + columns) {
+                println()
+            }
+        }
+    }
+
+    def getHints(rows : Int, columns : Int, scanner : Scanner) : Array[Array[Int]] = {
+        var hints = Array.ofDim[Int](rows + columns, rows + columns)
+        var hintString : String = scanner.useDelimiter("\\Z").next
+        var num : Char = 0
+        var x : Int = 0
+        var y : Int = 0
+        var index : Int = 0
+        var character : Char = 0
+        var strTrav : Int = 0
+
+        for(strTrav <- 0 until hintString.length) {
+            print(hintString.charAt(strTrav).asInstanceOf[Int] + " ")
         }
 
+        println()
+
+        character = hintString.charAt(index)
+
+        for(x <- 0 until rows + columns) {
+            y = 0
+            while(character != 10 && index < hintString.length) {
+                println("Begin while loop...")
+                // Test if char read is an int
+                if(character > 47 && character < 58 ) {
+                    hints(x)(y) = character.asInstanceOf[Int]
+                    println(character + " placed in " + x + " " + y)
+                    index += 1
+                    y += 1
+                    if(index < hintString.length) {
+                        character = hintString.charAt(index)
+                    }                }
+                // Test if char read is a space
+                else if(character == ' ') {
+                    index += 1
+                    if(index < hintString.length) {
+                        character = hintString.charAt(index)
+                    }                }
+                println("Index: " + index)
+            }
+            println("Out of while loop...")
+            index += 1
+            println("Index: " + index)
+            println("String Len: " + hintString.length)
+            if(index < hintString.length) {
+                character = hintString.charAt(index)
+            }
+        }
+
+        println("Returning...")
+
         return hints
+    }
+
+    def getNumHints(rowCol : Int, hints : Array[Array[Int]]) : Array[Int] = {
+        var numHints : Int = 0
+        var numHintsArr : Array[Int] = new Array[Int](rowCol)
+        var x : Int = 0
+        var y : Int = 0
+
+        for(x <- 0 until rowCol) {
+            y = 0
+            numHints = 0
+            while(hints(x)(y) != 0) {
+                numHints += 1
+                y += 1
+            }
+            numHintsArr(x) = numHints
+        }
+
+        return numHintsArr
     }
 }

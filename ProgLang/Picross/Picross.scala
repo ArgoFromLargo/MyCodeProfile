@@ -159,4 +159,43 @@ object Picross{
 
         return numHintsArr
     }
+	
+	def solvePuzzle(puzzle : Array[Array[Char]], hints : Array[Array[Int]], numHints : Array[Int], rows : Int, columns : Int) : Unit = {
+		
+	}
+	
+	// This confirms that the number of expected cells to be filled are
+	def checkSolved(puzzle : Array[Array[Char]], hints : Array[Array[Int]], numHints : Array[Int], rows : Int, columns : Int) : Boolean = {
+		var total : Int = 0
+		var numFilled : Int = 0
+		
+		for(numHintsIndex <- 0 until numHints.length) {
+			for(hintIndex <- 0 until numHints(numHintsIndex) {
+				total += hints(numHintsIndex)(hintIndex)
+			}
+			// If reading row hints
+			if(numHintsIndex < rows) {
+				for(puzzleColumn <- 0 until columns) {
+					if(puzzle(numHintsIndex)(puzzleColumn) == 'X')
+						numFilled += 1
+				}
+			}
+			// If reading column hints
+			else {
+				for(puzzleRow <- 0 until rows) {
+					if(puzzle(numHintsIndex)(puzzleColumn) == 'X')
+						numFilled += 1
+				}
+			}
+			// Compare the expected number filled to what is filled
+			if(numFilled != total) {
+				return false
+			}
+		}
+		return true
+	}
+	
+	def blank(puzzle : Array[Array[Char]], hints : Array[Array[Int]], numHints : Array[Int], rows : Int, columns : Int) : Unit = {
+		
+	}
 }
